@@ -5,6 +5,11 @@
 
 include make/head.mk
 
+# There are two supported builds.  We build for the standard Wordle word list by default.  But if you set
+# the following variable to 1, then we build for the valid word list for Wordle on the Captain's Quarters II
+# BBS.
+BUILD_FOR_CQ2 := 0
+
 # Customize this file to control what kind of project you are working on,
 # where to find files, etc.
 
@@ -46,7 +51,7 @@ TARGETTYPE=nda
 
 # Add any other directories where you are putting C or assembly source
 # files to this list:
-# SRCDIRS+=
+SRCDIRS+=$(GENDIR)
 
 # If you put your main entry point for your project in a file called main.c
 # Then you don't need to change this value.  If you want to call your entry
@@ -174,12 +179,22 @@ COPYBOOTDIRS=
 # All of your commands associated with a rule _must_ start with a tab
 # character.  Xcode makes it a bit tough to type a tab character by
 # default.  Press option-tab within Xcode to insert a tab character.
-gen:
+ifeq ($(BUILD_FOR_CQ2),1)
+INPUT_WORD_LIST:=cq2_valid_word_list.txt
+else
+INPUT_WORD_LIST:=valid-wordle-words.txt
+endif
+
+gen: $(GENDIR)/wordData.s
+
+$(GENDIR)/wordData.s: genWords.pl Makefile
+	genWords.pl $(INPUT_WORD_LIST) frequency-alpha-alldicts.txt "$(GENDIR)"
 
 # For any files you generated in the gen target above, you should
 # add rules in genclean to remove those generated files when you
 # clean your build.
 genclean:
+	$(RM) $(GENDIR)/wordData.s $(GENDIR)/countData.s
 
 # Do not change anything else below here...
 include make/tail.mk

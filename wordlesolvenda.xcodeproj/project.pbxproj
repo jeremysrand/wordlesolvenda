@@ -73,6 +73,13 @@
 		9D741AD12C48422D008B2961 /* tar */ = {isa = PBXFileReference; lastKnownFileType = file; path = tar; sourceTree = "<group>"; };
 		9D741AD32C48422D008B2961 /* tail.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = tail.mk; sourceTree = "<group>"; };
 		9D741AD62C48422D008B2961 /* wordlesolvenda.xcscheme */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = wordlesolvenda.xcscheme; path = ../../wordlesolvenda.xcodeproj/xcshareddata/xcschemes/wordlesolvenda.xcscheme; sourceTree = "<group>"; };
+		9D741AE92C48429C008B2961 /* genWords.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = genWords.pl; sourceTree = "<group>"; };
+		9D741AEA2C48429C008B2961 /* cq2_valid_word_list.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = cq2_valid_word_list.txt; sourceTree = "<group>"; };
+		9D741AEB2C48429C008B2961 /* frequency-alpha-alldicts.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "frequency-alpha-alldicts.txt"; sourceTree = "<group>"; };
+		9D741AEC2C48429C008B2961 /* valid-wordle-words.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "valid-wordle-words.txt"; sourceTree = "<group>"; };
+		9D741AED2C48429C008B2961 /* words.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = words.h; sourceTree = "<group>"; };
+		9D741AEE2C4842F3008B2961 /* solver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = solver.h; sourceTree = "<group>"; };
+		9D741AEF2C4842F3008B2961 /* solver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = solver.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,8 +119,15 @@
 				9D741AB72C48422D008B2961 /* main.h */,
 				9D741AB82C48422D008B2961 /* main.rez */,
 				9D741ABA2C48422D008B2961 /* Makefile */,
+				9D741AEA2C48429C008B2961 /* cq2_valid_word_list.txt */,
+				9D741AEB2C48429C008B2961 /* frequency-alpha-alldicts.txt */,
+				9D741AE92C48429C008B2961 /* genWords.pl */,
+				9D741AEC2C48429C008B2961 /* valid-wordle-words.txt */,
+				9D741AED2C48429C008B2961 /* words.h */,
 				9D741ABC2C48422D008B2961 /* make */,
 				9D741AD52C48422D008B2961 /* Supporting Files */,
+				9D741AEE2C4842F3008B2961 /* solver.h */,
+				9D741AEF2C4842F3008B2961 /* solver.c */,
 			);
 			path = wordlesolvenda;
 			sourceTree = "<group>";

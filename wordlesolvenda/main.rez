@@ -21,12 +21,12 @@ resource rVersion (1) {
         0           /* Release number */
     },
     verUS,
-    "wordlesolvenda",
+    "Wordle Solver",
     "Copyright \$A9 2024 Jeremy Rand"
 };
 
 
-resource rWindParam1 (windowRes) {
+resource rWindParam1 (WS_RES_WINDOW) {
     $C0A5,                      /* wFrameBits */
     nil,                        /* wTitle */
     0,                          /* wRefCon */
@@ -39,10 +39,466 @@ resource rWindParam1 (windowRes) {
     {0,0},                      /* page ver horiz */
     0,                          /* winfoRefcon */
     0,                          /* wInfoHeight */
-    {50,50,62,200},             /* wposition */
+    {WS_RES_WIN_Y, WS_RES_WIN_X, WS_RES_WIN_Y+WS_RES_WIN_HEIGHT, WS_RES_WIN_X+WS_RES_WIN_WIDTH}, /* wposition */
     infront,                    /* wPlane */
-    nil,                        /* wStorage */
-    $0800                       /* wInVerb */
+    WS_RES_CONTROL_LIST,        /* wStorage */
+    $0809                       /* wInVerb */
 };
 
 
+resource rControlList (WS_RES_CONTROL_LIST) {
+    {
+        WS_RES_BTN_0_0,
+        WS_RES_BTN_0_1,
+        WS_RES_BTN_0_2,
+        WS_RES_BTN_0_3,
+        WS_RES_BTN_0_4,
+        WS_RES_BTN_1_0,
+        WS_RES_BTN_1_1,
+        WS_RES_BTN_1_2,
+        WS_RES_BTN_1_3,
+        WS_RES_BTN_1_4,
+        WS_RES_BTN_2_0,
+        WS_RES_BTN_2_1,
+        WS_RES_BTN_2_2,
+        WS_RES_BTN_2_3,
+        WS_RES_BTN_2_4,
+        WS_RES_BTN_3_0,
+        WS_RES_BTN_3_1,
+        WS_RES_BTN_3_2,
+        WS_RES_BTN_3_3,
+        WS_RES_BTN_3_4,
+        WS_RES_BTN_4_0,
+        WS_RES_BTN_4_1,
+        WS_RES_BTN_4_2,
+        WS_RES_BTN_4_3,
+        WS_RES_BTN_4_4,
+        WS_RES_BTN_5_0,
+        WS_RES_BTN_5_1,
+        WS_RES_BTN_5_2,
+        WS_RES_BTN_5_3,
+        WS_RES_BTN_5_4,
+    }
+};
+
+resource rPString (WS_RES_BTN_EMPTY_STR, noCrossBank) { " " };
+
+
+resource rControlTemplate (WS_RES_BTN_0_0) {
+    WS_RES_BTN_0_0,
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_0, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_0_1) {
+    WS_RES_BTN_0_1,
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_1, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_0_2) {
+    WS_RES_BTN_0_2,
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_2, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_0_3) {
+    WS_RES_BTN_0_3,
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_3, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_0_4) {
+    WS_RES_BTN_0_4,
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_4, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_1_0) {
+    WS_RES_BTN_1_0,
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_0, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_1_1) {
+    WS_RES_BTN_1_1,
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_1, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_1_2) {
+    WS_RES_BTN_1_2,
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_2, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_1_3) {
+    WS_RES_BTN_1_3,
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_3, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_1_4) {
+    WS_RES_BTN_1_4,
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_4, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_2_0) {
+    WS_RES_BTN_2_0,
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_0, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_2_1) {
+    WS_RES_BTN_2_1,
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_1, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_2_2) {
+    WS_RES_BTN_2_2,
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_2, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_2_3) {
+    WS_RES_BTN_2_3,
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_3, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_2_4) {
+    WS_RES_BTN_2_4,
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_4, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_3_0) {
+    WS_RES_BTN_3_0,
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_0, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_3_1) {
+    WS_RES_BTN_3_1,
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_1, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_3_2) {
+    WS_RES_BTN_3_2,
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_2, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_3_3) {
+    WS_RES_BTN_3_3,
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_3, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_3_4) {
+    WS_RES_BTN_3_4,
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_4, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_4_0) {
+    WS_RES_BTN_4_0,
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_0, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_4_1) {
+    WS_RES_BTN_4_1,
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_1, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_4_2) {
+    WS_RES_BTN_4_2,
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_2, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_4_3) {
+    WS_RES_BTN_4_3,
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_3, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_4_4) {
+    WS_RES_BTN_4_4,
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_4, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_5_0) {
+    WS_RES_BTN_5_0,
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_0, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_5_1) {
+    WS_RES_BTN_5_1,
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_1, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_5_2) {
+    WS_RES_BTN_5_2,
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_2, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_5_3) {
+    WS_RES_BTN_5_3,
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_3, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_5_4) {
+    WS_RES_BTN_5_4,
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_4, 0, 0},
+    SimpleButtonControl {{
+        $0002,
+        $3002,
+        0,
+        WS_RES_BTN_EMPTY_STR,
+        0,
+        {" ","",0,0}
+    }};
+};

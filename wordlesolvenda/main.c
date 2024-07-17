@@ -8,7 +8,7 @@
  */
 
 
-#pragma nda NDAOpen NDAClose NDAAction NDAInit -1 0x03FF "  wordlesolvenda\\H**"
+#pragma nda NDAOpen NDAClose NDAAction NDAInit -1 0x03FF "  Wordle Solver\\H**"
 
 
 #include <orca.h>
@@ -16,6 +16,7 @@
 #include <QuickDraw.h>
 #include <Window.h>
 #include <Desk.h>
+#include <Control.h>
 #include <Event.h>
 #include <Resources.h>
 #include <MiscTool.h>
@@ -23,6 +24,7 @@
 #include <Loader.h>
 
 #include "main.h"
+#include "solver.h"
 
 
 static BOOLEAN ndaActive;
@@ -39,6 +41,7 @@ void NDAClose(void)
     }
     
     ResourceShutDown();
+    deinitSolver();
 }
 
 
@@ -62,8 +65,7 @@ void NDAInit(int code)
 void DrawContents(void)
 {
     PenNormal();
-    MoveTo(7,10);
-    DrawCString("Hello, world!");
+    DrawControls(GetPort());
 }
 #pragma databank 0
 
@@ -78,6 +80,7 @@ GrafPortPtr NDAOpen(void)
     
     if (ndaActive)
         return NULL;
+    initSolver();
     
     levelDCB.pCount = 2;
     GetLevelGS(&levelDCB);
@@ -93,7 +96,7 @@ GrafPortPtr NDAOpen(void)
     
     oldResourceApp = OpenResourceFileByID(readEnable, userId);
     
-    winPtr = NewWindow2("\p wordlesolvenda ", 0, DrawContents, NULL, 0x02, windowRes, rWindParam1);
+    winPtr = NewWindow2((Pointer)"\p Wordle Solver ", 0, DrawContents, NULL, 0x02, WS_RES_WINDOW, rWindParam1);
     
     SetSysWindow(winPtr);
     ShowWindow(winPtr);
