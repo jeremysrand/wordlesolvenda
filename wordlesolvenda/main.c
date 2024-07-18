@@ -51,6 +51,7 @@
 static BOOLEAN ndaActive;
 static GrafPortPtr winPtr;
 static unsigned int userId;
+static unsigned int currentRow;
 
 static char * guesses[] = {
     "AEROS",
@@ -139,6 +140,7 @@ void setupButtons(void)
     int row, col;
     CtlRecHndl ctl;
     
+    currentRow = 0;
     for (row = 0; row < NUM_ROWS; row++) {
         for (col = 0; col < NUM_COLUMNS; col++) {
             ctl = CONTROL_ROW_COL_TO_HANDLE(row, col);
@@ -146,12 +148,15 @@ void setupButtons(void)
             setButtonTitle(ctl, guesses[row][col]);
             if (row > 0)
                 HideControl(ctl);
-            else
+            else {
                 ShowControl(ctl);
+            }
+            
+            HiliteControl(row == 0 ? noHilite : inactiveHilite, ctl);
         }
         
         ctl = CONTROL_ROW_TO_OK_HANDLE(row);
-        if (row > 0)
+        if (row != 0)
             HideControl(ctl);
         else
             ShowControl(ctl);
@@ -213,6 +218,30 @@ void HandleRun(void)
 }
 
 
+void incrementRow(void)
+{
+    // JSR_TODO - Read the current values and feed the algorithm here
+    
+    int col;
+    CtlRecHndl ctl;
+    
+    for (col = 0; col < NUM_COLUMNS; col++) {
+        ctl = CONTROL_ROW_COL_TO_HANDLE(currentRow, col);
+        HiliteControl(inactiveHilite, ctl);
+    }
+    HideControl(CONTROL_ROW_TO_OK_HANDLE(currentRow));
+    
+    currentRow++;
+    if (currentRow < NUM_ROWS) {
+        for (col = 0; col < NUM_COLUMNS; col++) {
+            ctl = CONTROL_ROW_COL_TO_HANDLE(currentRow, col);
+            ShowControl(ctl);
+            HiliteControl(noHilite, ctl);
+        }
+        ShowControl(CONTROL_ROW_TO_OK_HANDLE(currentRow));
+    }
+}
+
 void HandleControl(EventRecord *event)
 {
     CtlRecHndl ctl;
@@ -221,6 +250,10 @@ void HandleControl(EventRecord *event)
     
     if (IS_LETTER_CONTROL(event->wmTaskData4)) {
         cycleButtonColor(event->wmTaskData4);
+    } else if (IS_OK_CONTROL(event->wmTaskData4)) {
+        incrementRow();
+    } else if (event->wmTaskData4 == WS_RES_BTN_RESTART) {
+        setupButtons();
     }
 }
 

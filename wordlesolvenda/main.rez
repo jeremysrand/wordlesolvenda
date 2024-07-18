@@ -55,6 +55,10 @@ resource rWindParam1 (WS_RES_WINDOW) {
 
 resource rControlList (WS_RES_CONTROL_LIST) {
     {
+        WS_RES_POPUP,
+        WS_RES_TEXT_1,
+        WS_RES_TEXT_2,
+    
         WS_RES_BTN_0_0,
         WS_RES_BTN_0_1,
         WS_RES_BTN_0_2,
@@ -96,7 +100,9 @@ resource rControlList (WS_RES_CONTROL_LIST) {
         WS_RES_BTN_2_OK,
         WS_RES_BTN_3_OK,
         WS_RES_BTN_4_OK,
-        WS_RES_BTN_5_OK
+        WS_RES_BTN_5_OK,
+        
+        WS_RES_BTN_RESTART
     }
 };
 
@@ -128,7 +134,78 @@ resource rPString (WS_RES_BTN_STR_X, noCrossBank) { "X" };
 resource rPString (WS_RES_BTN_STR_Y, noCrossBank) { "Y" };
 resource rPString (WS_RES_BTN_STR_Z, noCrossBank) { "Z" };
 resource rPString (WS_RES_BTN_STR_OK, noCrossBank) { "OK" };
+resource rPString (WS_RES_BTN_STR_NYT, noCrossBank) { "NYT Wordle" };
+resource rPString (WS_RES_BTN_STR_CQ2, noCrossBank) { "CQ2 Wordle" };
+resource rPString (WS_RES_BTN_STR_VARIANT, noCrossBank) { "Variant  " };
+resource rPString (WS_RES_BTN_STR_RESTART, noCrossBank) { "Restart" };
 
+
+resource rControlTemplate (WS_RES_POPUP) {
+    WS_RES_POPUP,
+    {WS_RES_BTN_SPACE_Y, WS_RES_BTN_SPACE_X, 0, 0},
+    PopUpControl {{
+        $0000,
+        $1002,
+        0,
+        0,
+        WS_RES_MENU,
+        WS_RES_MENU_ITEM_NYT,
+        0
+    }};
+};
+
+resource rMenu (WS_RES_MENU) {
+   WS_RES_MENU,
+   RefIsResource*MenuTitleRefShift+RefIsResource*ItemRefShift+fAllowCache,
+   WS_RES_BTN_STR_VARIANT,
+   {
+      WS_RES_MENU_ITEM_NYT,
+      WS_RES_MENU_ITEM_CQ2
+      };
+   };
+
+resource rMenuItem (WS_RES_MENU_ITEM_NYT) {
+   WS_RES_MENU_ITEM_NYT,
+   "","",
+   0,
+   RefIsResource*ItemTitleRefShift+fXOR,
+   WS_RES_BTN_STR_NYT
+   };
+
+resource rMenuItem (WS_RES_MENU_ITEM_CQ2) {
+   WS_RES_MENU_ITEM_CQ2,
+   "","",
+   0,
+   RefIsResource*ItemTitleRefShift+fXOR,
+   WS_RES_BTN_STR_CQ2
+   };
+      
+resource rControlTemplate (WS_RES_TEXT_1) {
+   WS_RES_TEXT_1,
+   {WS_RES_TEXT_1_Y, 2*WS_RES_BTN_SPACE_X, WS_RES_TEXT_1_Y+WS_RES_TEXT_HEIGHT, WS_RES_WIN_WIDTH-(4*WS_RES_BTN_SPACE_X)},
+   statTextControl {{
+      0x0000,
+      0x1002,
+      0,
+      WS_RES_TEXT_1
+      }};
+   };
+      
+resource rTextForLETextBox2 (WS_RES_TEXT_1) {"Words remaining: 2000"};
+      
+resource rControlTemplate (WS_RES_TEXT_2) {
+   WS_RES_TEXT_2,
+   {WS_RES_TEXT_2_Y, 2*WS_RES_BTN_SPACE_X, WS_RES_TEXT_2_Y+WS_RES_TEXT_HEIGHT, WS_RES_WIN_WIDTH-(4*WS_RES_BTN_SPACE_X)},
+   statTextControl {{
+      0x0000,
+      0x1002,
+      0,
+      WS_RES_TEXT_2
+      }};
+   };
+      
+resource rTextForLETextBox2 (WS_RES_TEXT_2) {"Thinking..."};
+      
 
 resource rControlTemplate (WS_RES_BTN_0_0) {
     WS_RES_BTN_0_0,
@@ -199,7 +276,7 @@ resource rControlTemplate (WS_RES_BTN_0_OK) {
     WS_RES_BTN_0_OK,
     {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_0 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
     SimpleButtonControl {{
-        $0001,
+        $0000,
         $100a,
         0,
         WS_RES_BTN_STR_OK,
@@ -277,7 +354,7 @@ resource rControlTemplate (WS_RES_BTN_1_OK) {
     WS_RES_BTN_1_OK,
     {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_1 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
     SimpleButtonControl {{
-        $0001,
+        $0000,
         $100a,
         0,
         WS_RES_BTN_STR_OK,
@@ -355,7 +432,7 @@ resource rControlTemplate (WS_RES_BTN_2_OK) {
     WS_RES_BTN_2_OK,
     {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_2 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
     SimpleButtonControl {{
-        $0001,
+        $0000,
         $100a,
         0,
         WS_RES_BTN_STR_OK,
@@ -433,7 +510,7 @@ resource rControlTemplate (WS_RES_BTN_3_OK) {
     WS_RES_BTN_3_OK,
     {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_3 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
     SimpleButtonControl {{
-        $0001,
+        $0000,
         $100a,
         0,
         WS_RES_BTN_STR_OK,
@@ -511,7 +588,7 @@ resource rControlTemplate (WS_RES_BTN_4_OK) {
     WS_RES_BTN_4_OK,
     {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_4 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
     SimpleButtonControl {{
-        $0001,
+        $0000,
         $100a,
         0,
         WS_RES_BTN_STR_OK,
@@ -589,10 +666,23 @@ resource rControlTemplate (WS_RES_BTN_5_OK) {
     WS_RES_BTN_5_OK,
     {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_5 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
     SimpleButtonControl {{
-        $0001,
+        $0000,
         $100a,
         0,
         WS_RES_BTN_STR_OK,
+        WS_RS_BTN_WHITE
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_RESTART) {
+    WS_RES_BTN_RESTART,
+    {WS_RES_BTN_RESTART_Y, WS_RES_BIN_RESTART_LEFT, WS_RES_BTN_RESTART_Y + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BIN_RESTART_RIGHT},
+    SimpleButtonControl {{
+        $0001,
+        $100a,
+        0,
+        WS_RES_BTN_STR_RESTART,
         WS_RS_BTN_WHITE
     }};
 };
