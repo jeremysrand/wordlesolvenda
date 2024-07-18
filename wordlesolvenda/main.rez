@@ -11,6 +11,13 @@
 
 #include "main.h"
 
+type rCtlColorTbl {
+        unsigned hex word;          /* outlineColor */
+        unsigned hex word;          /* interiorColor */
+        unsigned hex word;          /* interiorHiLiteColor */
+        unsigned hex word;          /* TextColor */
+        unsigned hex word;          /* TextHiLiteColor */
+};
 
 resource rVersion (1) {
     {
@@ -53,452 +60,563 @@ resource rControlList (WS_RES_CONTROL_LIST) {
         WS_RES_BTN_0_2,
         WS_RES_BTN_0_3,
         WS_RES_BTN_0_4,
+        
         WS_RES_BTN_1_0,
         WS_RES_BTN_1_1,
         WS_RES_BTN_1_2,
         WS_RES_BTN_1_3,
         WS_RES_BTN_1_4,
+        
         WS_RES_BTN_2_0,
         WS_RES_BTN_2_1,
         WS_RES_BTN_2_2,
         WS_RES_BTN_2_3,
         WS_RES_BTN_2_4,
+        
         WS_RES_BTN_3_0,
         WS_RES_BTN_3_1,
         WS_RES_BTN_3_2,
         WS_RES_BTN_3_3,
         WS_RES_BTN_3_4,
+        
         WS_RES_BTN_4_0,
         WS_RES_BTN_4_1,
         WS_RES_BTN_4_2,
         WS_RES_BTN_4_3,
         WS_RES_BTN_4_4,
+        
         WS_RES_BTN_5_0,
         WS_RES_BTN_5_1,
         WS_RES_BTN_5_2,
         WS_RES_BTN_5_3,
         WS_RES_BTN_5_4,
+                
+        WS_RES_BTN_0_OK,
+        WS_RES_BTN_1_OK,
+        WS_RES_BTN_2_OK,
+        WS_RES_BTN_3_OK,
+        WS_RES_BTN_4_OK,
+        WS_RES_BTN_5_OK
     }
 };
 
-resource rPString (WS_RES_BTN_EMPTY_STR, noCrossBank) { " " };
+resource rPString (WS_RES_BTN_STR_EMPTY, noCrossBank) { " " };
+resource rPString (WS_RES_BTN_STR_A, noCrossBank) { "A" };
+resource rPString (WS_RES_BTN_STR_B, noCrossBank) { "B" };
+resource rPString (WS_RES_BTN_STR_C, noCrossBank) { "C" };
+resource rPString (WS_RES_BTN_STR_D, noCrossBank) { "D" };
+resource rPString (WS_RES_BTN_STR_E, noCrossBank) { "E" };
+resource rPString (WS_RES_BTN_STR_F, noCrossBank) { "F" };
+resource rPString (WS_RES_BTN_STR_G, noCrossBank) { "G" };
+resource rPString (WS_RES_BTN_STR_H, noCrossBank) { "H" };
+resource rPString (WS_RES_BTN_STR_I, noCrossBank) { "I" };
+resource rPString (WS_RES_BTN_STR_J, noCrossBank) { "J" };
+resource rPString (WS_RES_BTN_STR_K, noCrossBank) { "K" };
+resource rPString (WS_RES_BTN_STR_L, noCrossBank) { "L" };
+resource rPString (WS_RES_BTN_STR_M, noCrossBank) { "M" };
+resource rPString (WS_RES_BTN_STR_N, noCrossBank) { "N" };
+resource rPString (WS_RES_BTN_STR_O, noCrossBank) { "O" };
+resource rPString (WS_RES_BTN_STR_P, noCrossBank) { "P" };
+resource rPString (WS_RES_BTN_STR_Q, noCrossBank) { "Q" };
+resource rPString (WS_RES_BTN_STR_R, noCrossBank) { "R" };
+resource rPString (WS_RES_BTN_STR_S, noCrossBank) { "S" };
+resource rPString (WS_RES_BTN_STR_T, noCrossBank) { "T" };
+resource rPString (WS_RES_BTN_STR_U, noCrossBank) { "U" };
+resource rPString (WS_RES_BTN_STR_V, noCrossBank) { "V" };
+resource rPString (WS_RES_BTN_STR_W, noCrossBank) { "W" };
+resource rPString (WS_RES_BTN_STR_X, noCrossBank) { "X" };
+resource rPString (WS_RES_BTN_STR_Y, noCrossBank) { "Y" };
+resource rPString (WS_RES_BTN_STR_Z, noCrossBank) { "Z" };
+resource rPString (WS_RES_BTN_STR_OK, noCrossBank) { "OK" };
 
 
 resource rControlTemplate (WS_RES_BTN_0_0) {
     WS_RES_BTN_0_0,
-    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_0, 0, 0},
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_0, WS_RES_BTN_ROW_0 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_0 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_A,
+        WS_RS_BTN_YELLOW
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_0_1) {
     WS_RES_BTN_0_1,
-    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_1, 0, 0},
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_1, WS_RES_BTN_ROW_0 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_1 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_E,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_0_2) {
     WS_RES_BTN_0_2,
-    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_2, 0, 0},
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_2, WS_RES_BTN_ROW_0 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_2 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_R,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_0_3) {
     WS_RES_BTN_0_3,
-    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_3, 0, 0},
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_3, WS_RES_BTN_ROW_0 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_3 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_O,
+        WS_RS_BTN_GREEN
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_0_4) {
     WS_RES_BTN_0_4,
-    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_4, 0, 0},
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_4, WS_RES_BTN_ROW_0 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_4 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
+        WS_RES_BTN_STR_S,
+        WS_RS_BTN_WHITE
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_0_OK) {
+    WS_RES_BTN_0_OK,
+    {WS_RES_BTN_ROW_0, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_0 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
+    SimpleButtonControl {{
+        $0001,
+        $100a,
         0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_OK,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_1_0) {
     WS_RES_BTN_1_0,
-    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_0, 0, 0},
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_0, WS_RES_BTN_ROW_1 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_0 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_1_1) {
     WS_RES_BTN_1_1,
-    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_1, 0, 0},
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_1, WS_RES_BTN_ROW_1 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_1 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_1_2) {
     WS_RES_BTN_1_2,
-    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_2, 0, 0},
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_2, WS_RES_BTN_ROW_1 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_2 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_1_3) {
     WS_RES_BTN_1_3,
-    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_3, 0, 0},
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_3, WS_RES_BTN_ROW_1 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_3 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_1_4) {
     WS_RES_BTN_1_4,
-    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_4, 0, 0},
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_4, WS_RES_BTN_ROW_1 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_4 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_1_OK) {
+    WS_RES_BTN_1_OK,
+    {WS_RES_BTN_ROW_1, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_1 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
+    SimpleButtonControl {{
+        $0001,
+        $100a,
         0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_OK,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_2_0) {
     WS_RES_BTN_2_0,
-    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_0, 0, 0},
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_0, WS_RES_BTN_ROW_2 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_0 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_2_1) {
     WS_RES_BTN_2_1,
-    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_1, 0, 0},
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_1, WS_RES_BTN_ROW_2 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_1 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_2_2) {
     WS_RES_BTN_2_2,
-    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_2, 0, 0},
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_2, WS_RES_BTN_ROW_2 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_2 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_2_3) {
     WS_RES_BTN_2_3,
-    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_3, 0, 0},
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_3, WS_RES_BTN_ROW_2 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_3 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_2_4) {
     WS_RES_BTN_2_4,
-    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_4, 0, 0},
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_4, WS_RES_BTN_ROW_2 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_4 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_2_OK) {
+    WS_RES_BTN_2_OK,
+    {WS_RES_BTN_ROW_2, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_2 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
+    SimpleButtonControl {{
+        $0001,
+        $100a,
         0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_OK,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_3_0) {
     WS_RES_BTN_3_0,
-    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_0, 0, 0},
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_0, WS_RES_BTN_ROW_3 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_0 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_3_1) {
     WS_RES_BTN_3_1,
-    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_1, 0, 0},
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_1, WS_RES_BTN_ROW_3 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_1 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_3_2) {
     WS_RES_BTN_3_2,
-    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_2, 0, 0},
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_2, WS_RES_BTN_ROW_3 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_2 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_3_3) {
     WS_RES_BTN_3_3,
-    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_3, 0, 0},
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_3, WS_RES_BTN_ROW_3 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_3 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_3_4) {
     WS_RES_BTN_3_4,
-    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_4, 0, 0},
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_4, WS_RES_BTN_ROW_3 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_4 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_3_OK) {
+    WS_RES_BTN_3_OK,
+    {WS_RES_BTN_ROW_3, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_3 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
+    SimpleButtonControl {{
+        $0001,
+        $100a,
         0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_OK,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_4_0) {
     WS_RES_BTN_4_0,
-    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_0, 0, 0},
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_0, WS_RES_BTN_ROW_4 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_0 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_4_1) {
     WS_RES_BTN_4_1,
-    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_1, 0, 0},
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_1, WS_RES_BTN_ROW_4 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_1 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_4_2) {
     WS_RES_BTN_4_2,
-    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_2, 0, 0},
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_2, WS_RES_BTN_ROW_4 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_2 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_4_3) {
     WS_RES_BTN_4_3,
-    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_3, 0, 0},
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_3, WS_RES_BTN_ROW_4 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_3 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_4_4) {
     WS_RES_BTN_4_4,
-    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_4, 0, 0},
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_4, WS_RES_BTN_ROW_4 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_4 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
+    }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_4_OK) {
+    WS_RES_BTN_4_OK,
+    {WS_RES_BTN_ROW_4, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_4 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
+    SimpleButtonControl {{
+        $0001,
+        $100a,
         0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_OK,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_5_0) {
     WS_RES_BTN_5_0,
-    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_0, 0, 0},
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_0, WS_RES_BTN_ROW_5 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_0 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_5_1) {
     WS_RES_BTN_5_1,
-    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_1, 0, 0},
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_1, WS_RES_BTN_ROW_5 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_1 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_5_2) {
     WS_RES_BTN_5_2,
-    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_2, 0, 0},
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_2, WS_RES_BTN_ROW_5 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_2 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_5_3) {
     WS_RES_BTN_5_3,
-    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_3, 0, 0},
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_3, WS_RES_BTN_ROW_5 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_3 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
 };
 
 
 resource rControlTemplate (WS_RES_BTN_5_4) {
     WS_RES_BTN_5_4,
-    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_4, 0, 0},
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_4, WS_RES_BTN_ROW_5 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_4 + WS_RES_BTN_SPACE_WIDTH},
     SimpleButtonControl {{
         $0002,
-        $3002,
+        $100a,
         0,
-        WS_RES_BTN_EMPTY_STR,
-        0,
-        {" ","",0,0}
+        WS_RES_BTN_STR_EMPTY,
+        WS_RS_BTN_WHITE
     }};
+};
+
+
+resource rControlTemplate (WS_RES_BTN_5_OK) {
+    WS_RES_BTN_5_OK,
+    {WS_RES_BTN_ROW_5, WS_RES_BTN_COL_OK, WS_RES_BTN_ROW_5 + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BTN_COL_OK + WS_RES_BTN_OK_WIDTH},
+    SimpleButtonControl {{
+        $0001,
+        $100a,
+        0,
+        WS_RES_BTN_STR_OK,
+        WS_RS_BTN_WHITE
+    }};
+};
+
+resource rCtlColorTbl (WS_RS_BTN_WHITE) {
+    $0000,      // Outline colour is black
+    $00f0,      // Interior colour is white when not selected
+    $0000,      // Interior colour is black when selected
+    $00f0,      // Text background colour is white and foreground colour is black when not selected
+    $000f       // Text background colour is black and foreground colour is white when selected
+};
+
+resource rCtlColorTbl (WS_RS_BTN_GREEN) {
+    $0000,      // Outline colour is black
+    $00a0,      // Interior colour is green (640 mode default) when not selected
+    $0000,      // Interior colour is black when selected
+    $00a0,      // Text background colour is green and foreground colour is black when not selected
+    $000f       // Text background colour is black and foreground colour is white when selected
+};
+
+resource rCtlColorTbl (WS_RS_BTN_YELLOW) {
+    $0000,      // Outline colour is black
+    $00e0,      // Interior colour is yellow (640 mode default) when not selected
+    $0000,      // Interior colour is black when selected
+    $00e0,      // Text background colour is yellow and foreground colour is black when not selected
+    $000f       // Text background colour is black and foreground colour is white when selected
 };

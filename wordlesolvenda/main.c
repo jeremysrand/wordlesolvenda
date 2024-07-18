@@ -27,10 +27,42 @@
 #include "solver.h"
 
 
+// Constants and macros
+#define NUM_COLUMNS 5
+#define NUM_ROWS 6
+
+#define IS_LETTER_CONTROL(id) (((id) >= WS_RES_BTN_0_0) && ((id) <= WS_RES_BTN_5_4))
+#define IS_OK_CONTROL(id) (((id) >= WS_RES_BTN_0_OK) && ((id) <= WS_RES_BTN_5_OK))
+
+#define CONTROL_ROW_COL_TO_ID(row, col) (WS_RES_BTN_0_0 + (col) + ((row) * NUM_COLUMNS))
+#define CONTROL_ROW_COL_TO_HANDLE(row, col) GetCtlHandleFromID(winPtr, CONTROL_ROW_COL_TO_ID((row), (col)))
+#define CONTROL_ID_TO_ROW(id) (((id) - WS_RES_BTN_0_0) / NUM_COLUMNS)
+#define CONTROL_ID_TO_COL(id) (((id) - WS_RES_BTN_0_0) % NUM_COLUMNS)
+
+#define CONTROL_ROW_TO_OK_ID(row) (WS_RES_BTN_0_OK + (row))
+#define CONTROL_ROW_TO_OK_HANDLE(row) GetCtlHandleFromID(winPtr, CONTROL_ROW_TO_OK_ID(row))
+
+#define CHAR_TO_BUTTON_STR(ch) ((Pointer)(unsigned long)(((ch) - 'A') + WS_RES_BTN_STR_A))
+#define BUTTON_STR_TO_CHAR(buttonStr) (((buttonStr) - WS_RES_BTN_STR_A) + 'A')
+
+
+// Globals
+
 static BOOLEAN ndaActive;
 static GrafPortPtr winPtr;
 static unsigned int userId;
 
+static char * guesses[] = {
+    "AEROS",
+    "UNITY",
+    "PHONE",
+    "APPLE",
+    "RETRO",
+    "FAULT"
+};
+
+
+// Implementation
 
 void NDAClose(void)
 {
@@ -69,6 +101,63 @@ void DrawContents(void)
 }
 #pragma databank 0
 
+void setButtonColour(CtlRecHndl ctl, long colour)
+{
+    HLock((Handle)ctl);
+    (*ctl)->ctlColor = (Pointer)colour;
+    HUnlock((Handle)ctl);
+}
+
+void cycleButtonColor(Long id)
+{
+    CtlRecHndl ctl = GetCtlHandleFromID(winPtr, id);
+    HLock((Handle)ctl);
+    switch ((int)(unsigned long)((*ctl)->ctlColor)) {
+        case WS_RS_BTN_WHITE:
+            (*ctl)->ctlColor = (Pointer)WS_RS_BTN_YELLOW;
+            break;
+            
+        case WS_RS_BTN_YELLOW:
+            (*ctl)->ctlColor = (Pointer)WS_RS_BTN_GREEN;
+            break;
+            
+        case WS_RS_BTN_GREEN:
+            (*ctl)->ctlColor = (Pointer)WS_RS_BTN_WHITE;
+            break;
+    }
+    InvalOneCtlByID(winPtr, id);
+    HUnlock((Handle)ctl);
+}
+
+void setButtonTitle(CtlRecHndl ctl, char ch)
+{
+    SetCtlTitle(CHAR_TO_BUTTON_STR(ch), (Handle)ctl);
+}
+
+void setupButtons(void)
+{
+    int row, col;
+    CtlRecHndl ctl;
+    
+    for (row = 0; row < NUM_ROWS; row++) {
+        for (col = 0; col < NUM_COLUMNS; col++) {
+            ctl = CONTROL_ROW_COL_TO_HANDLE(row, col);
+            setButtonColour(ctl, WS_RS_BTN_WHITE);
+            setButtonTitle(ctl, guesses[row][col]);
+            if (row > 0)
+                HideControl(ctl);
+            else
+                ShowControl(ctl);
+        }
+        
+        ctl = CONTROL_ROW_TO_OK_HANDLE(row);
+        if (row > 0)
+            HideControl(ctl);
+        else
+            ShowControl(ctl);
+    }
+}
+
 
 GrafPortPtr NDAOpen(void)
 {
@@ -96,11 +185,12 @@ GrafPortPtr NDAOpen(void)
     
     oldResourceApp = OpenResourceFileByID(readEnable, userId);
     
-    winPtr = NewWindow2((Pointer)"\p Wordle Solver ", 0, DrawContents, NULL, 0x02, WS_RES_WINDOW, rWindParam1);
+    winPtr = NewWindow2((Pointer)"\p Wordle Solver ", 0, DrawContents, NULL, refIsResource, WS_RES_WINDOW, rWindParam1);
     
     SetSysWindow(winPtr);
     ShowWindow(winPtr);
     SelectWindow(winPtr);
+    SetPort(winPtr);
     
     ndaActive = TRUE;
     
@@ -109,6 +199,8 @@ GrafPortPtr NDAOpen(void)
     
     levelDCB.level = oldLevel;
     SetLevelGS(&levelDCB);
+    
+    setupButtons();
     
     SetCurResourceApp(oldResourceApp);
     
@@ -123,6 +215,13 @@ void HandleRun(void)
 
 void HandleControl(EventRecord *event)
 {
+    CtlRecHndl ctl;
+    
+    SetPort(winPtr);
+    
+    if (IS_LETTER_CONTROL(event->wmTaskData4)) {
+        cycleButtonColor(event->wmTaskData4);
+    }
 }
 
 
