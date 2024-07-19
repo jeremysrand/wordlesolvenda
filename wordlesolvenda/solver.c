@@ -142,6 +142,66 @@ void updateKnowledge(const tLetterState * states)
     }
 }
 
+
+void getValidStates(tValidStates *states)
+{
+    static uint16_t correctLetterCount[NUM_LETTERS];
+    static uint16_t totalLetterCount[NUM_LETTERS];
+    uint16_t i;
+    uint16_t letterIndex;
+    char ch;
+    
+    if (currentGuess == NULL)
+        return;
+    
+    memset(correctLetterCount, 0, sizeof(correctLetterCount));
+    memset(totalLetterCount, 0, sizeof(totalLetterCount));
+    for (i = 0; i < WORD_LEN; i++) {
+        letterIndex = LETTER_TO_INDEX(currentGuess[i]);
+        totalLetterCount[letterIndex]++;
+        if (solvedLetters[i] == currentGuess[i])
+            correctLetterCount[letterIndex]++;
+    }
+    
+    for (i = 0; i < WORD_LEN; i++) {
+        ch = currentGuess[i];
+        letterIndex = LETTER_TO_INDEX(currentGuess[i]);
+        
+        states->validStates[i][IN_WORD_AT_POS] = TRUE;
+        states->validStates[i][IN_WORD_OTHER_POS] = TRUE;
+        states->validStates[i][NOT_IN_WORD] = TRUE;
+        
+        // If the letter is known to be in this position, then unset
+        // not in word and unset in other position.
+        if (solvedLetters[i] == currentGuess[i]) {
+            states->validStates[i][IN_WORD_OTHER_POS] = FALSE;
+            states->validStates[i][NOT_IN_WORD] = FALSE;
+            continue;
+        }
+        
+        // If the letter is known to be in the solution at most N times (N
+        // could be 0) and we have that many in the solution, then we know
+        // this letter cannot be in the solution.
+        if (letterCounts[letterIndex].max == correctLetterCount[letterIndex]) {
+            states->validStates[i][IN_WORD_AT_POS] = FALSE;
+            states->validStates[i][IN_WORD_OTHER_POS] = FALSE;
+            continue;
+        }
+        
+        // If the letter is known to not be in the solution at this
+        // position, then unset at position.
+        if (strchr(eliminatedLetters[i], ch) != NULL) {
+            states->validStates[i][IN_WORD_AT_POS] = FALSE;
+        }
+        
+        // If the letter must be in the solution N times and the
+        // solution has N or fewer, then unset not in word.
+        if (totalLetterCount[letterIndex] <= letterCounts[letterIndex].min) {
+            states->validStates[i][NOT_IN_WORD] = FALSE;
+        }
+    }
+}
+
 Boolean wordMatchesRules(char * wordPtr)
 {
     static uint16_t currentLetterCounts[NUM_LETTERS];
@@ -405,7 +465,7 @@ const char * nextGuess(const tLetterState * states)
     return result;
 }
 
-int numRemainingWords(void)
+uint16_t numRemainingWords(void)
 {
     return numWordsRemaining;
 }

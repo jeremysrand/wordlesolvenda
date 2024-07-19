@@ -22,6 +22,8 @@
 #include <MiscTool.h>
 #include <Memory.h>
 #include <Loader.h>
+
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -52,12 +54,12 @@
 
 static BOOLEAN ndaActive;
 static GrafPortPtr winPtr;
-static unsigned int userId;
-static unsigned int currentRow;
+static uint16_t userId;
+static uint16_t currentRow;
 
 static char line1[64] = "";
 static char line2[64] = "";
-static char knownLetters[NUM_COLUMNS];
+static tValidStates states;
 
 static long yellow_res = WS_RS_BTN_YELLOW_640;
 
@@ -133,24 +135,33 @@ long getButtonColour(CtlRecHndl ctl)
 
 void cycleButtonColor(Long id)
 {
+    uint16_t col = CONTROL_ID_TO_COL(id);
     CtlRecHndl ctl = GetCtlHandleFromID(winPtr, id);
+    BOOLEAN valid = TRUE;
+    
     HLock((Handle)ctl);
-    switch ((int)(unsigned long)((*ctl)->ctlColor)) {
+    switch ((unsigned long)((*ctl)->ctlColor)) {
         case WS_RS_BTN_WHITE:
             (*ctl)->ctlColor = (Pointer)yellow_res;
+            valid = states.validStates[col][IN_WORD_OTHER_POS];
             break;
             
         case WS_RS_BTN_YELLOW_640:
         case WS_RS_BTN_YELLOW_320:
             (*ctl)->ctlColor = (Pointer)WS_RS_BTN_GREEN;
+            valid = states.validStates[col][IN_WORD_AT_POS];
             break;
             
         case WS_RS_BTN_GREEN:
             (*ctl)->ctlColor = (Pointer)WS_RS_BTN_WHITE;
+            valid = states.validStates[col][NOT_IN_WORD];
             break;
     }
     InvalOneCtlByID(winPtr, id);
     HUnlock((Handle)ctl);
+    
+    if (!valid)
+        cycleButtonColor(id);
 }
 
 void setButtonTitle(CtlRecHndl ctl, char ch)
@@ -165,12 +176,11 @@ char getButtonTitle(CtlRecHndl ctl)
 
 void setupButtons(void)
 {
-    int row, col;
+    uint16_t row, col;
     CtlRecHndl ctl;
     const char * guess;
     
     currentRow = 0;
-    memset(knownLetters, 0, sizeof(knownLetters));
     
     *line1 = '\0';
     strcpy(line2, "  Thinking...");
@@ -178,6 +188,7 @@ void setupButtons(void)
     
     resetSolver();
     guess = nextGuess(NULL);
+    getValidStates(&states);
     
     sprintf(line1, "Words remaining: %d", numRemainingWords());
     strcpy(line2, "Mark letters in solution");
@@ -223,11 +234,11 @@ void initSolverWithVariant(void) {
 
 GrafPortPtr NDAOpen(void)
 {
-    unsigned int oldResourceApp;
+    uint16_t oldResourceApp;
     LevelRecGS levelDCB;
-    unsigned int oldLevel;
+    uint16_t oldLevel;
     SysPrefsRecGS prefsDCB;
-    unsigned int oldPrefs;
+    uint16_t oldPrefs;
     
     if (ndaActive)
         return NULL;
@@ -283,10 +294,10 @@ void HandleRun(void)
 void incrementRow(void)
 {
     static tLetterState state[WORD_LEN];
-    int col;
+    uint16_t col;
     CtlRecHndl ctl;
     const char * guess;
-    int numSolved = 0;
+    uint16_t numSolved = 0;
     
     for (col = 0; col < NUM_COLUMNS; col++) {
         ctl = CONTROL_ROW_COL_TO_HANDLE(currentRow, col);
@@ -295,7 +306,6 @@ void incrementRow(void)
             case WS_RS_BTN_GREEN:
                 state[col] = IN_WORD_AT_POS;
                 numSolved++;
-                knownLetters[col] = getButtonTitle(ctl);
                 break;
             case WS_RS_BTN_YELLOW_640:
             case WS_RS_BTN_YELLOW_320:
@@ -326,6 +336,7 @@ void incrementRow(void)
             drawText();
             return;
         }
+        getValidStates(&states);
         
         sprintf(line1, "Words remaining: %d", numRemainingWords());
         strcpy(line2, "Mark letters in solution");
@@ -335,11 +346,22 @@ void incrementRow(void)
             ctl = CONTROL_ROW_COL_TO_HANDLE(currentRow, col);
             ShowControl(ctl);
             setButtonTitle(ctl, guess[col]);
-            if (knownLetters[col] == guess[col]) {
+            if (states.validStates[col][NOT_IN_WORD]) {
+                if ((states.validStates[col][IN_WORD_AT_POS]) ||
+                    (states.validStates[col][IN_WORD_OTHER_POS]))
+                    HiliteControl(noHilite, ctl);
+                else
+                    HiliteControl(inactiveHilite, ctl);
+                setButtonColour(ctl, WS_RS_BTN_WHITE);
+            } else if (states.validStates[col][IN_WORD_OTHER_POS]) {
+                if (states.validStates[col][IN_WORD_AT_POS])
+                    HiliteControl(noHilite, ctl);
+                else
+                    HiliteControl(inactiveHilite, ctl);
+                setButtonColour(ctl, yellow_res);
+            } else {
                 HiliteControl(inactiveHilite, ctl);
                 setButtonColour(ctl, WS_RS_BTN_GREEN);
-            } else {
-                HiliteControl(noHilite, ctl);
             }
         }
         ShowControl(CONTROL_ROW_TO_OK_HANDLE(currentRow));
@@ -382,7 +404,7 @@ void HandleMenu(int menuItem)
 BOOLEAN NDAAction(EventRecord *sysEvent, int code)
 {
     static EventRecord localEvent;
-    unsigned int eventCode;
+    uint16_t eventCode;
     BOOLEAN result = FALSE;
     
     switch (code) {
