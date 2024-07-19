@@ -56,8 +56,6 @@ resource rWindParam1 (WS_RES_WINDOW) {
 resource rControlList (WS_RES_CONTROL_LIST) {
     {
         WS_RES_POPUP,
-        WS_RES_TEXT_1,
-        WS_RES_TEXT_2,
     
         WS_RES_BTN_0_0,
         WS_RES_BTN_0_1,
@@ -176,35 +174,9 @@ resource rMenuItem (WS_RES_MENU_ITEM_CQ2) {
    WS_RES_MENU_ITEM_CQ2,
    "","",
    0,
-   RefIsResource*ItemTitleRefShift+fXOR,
+   RefIsResource*ItemTitleRefShift+fXOR+fDisabled,
    WS_RES_BTN_STR_CQ2
    };
-      
-resource rControlTemplate (WS_RES_TEXT_1) {
-   WS_RES_TEXT_1,
-   {WS_RES_TEXT_1_Y, 2*WS_RES_BTN_SPACE_X, WS_RES_TEXT_1_Y+WS_RES_TEXT_HEIGHT, WS_RES_WIN_WIDTH-(4*WS_RES_BTN_SPACE_X)},
-   statTextControl {{
-      0x0000,
-      0x1002,
-      0,
-      WS_RES_TEXT_1
-      }};
-   };
-      
-resource rTextForLETextBox2 (WS_RES_TEXT_1) {"Words remaining: 2000"};
-      
-resource rControlTemplate (WS_RES_TEXT_2) {
-   WS_RES_TEXT_2,
-   {WS_RES_TEXT_2_Y, 2*WS_RES_BTN_SPACE_X, WS_RES_TEXT_2_Y+WS_RES_TEXT_HEIGHT, WS_RES_WIN_WIDTH-(4*WS_RES_BTN_SPACE_X)},
-   statTextControl {{
-      0x0000,
-      0x1002,
-      0,
-      WS_RES_TEXT_2
-      }};
-   };
-      
-resource rTextForLETextBox2 (WS_RES_TEXT_2) {"Thinking..."};
       
 
 resource rControlTemplate (WS_RES_BTN_0_0) {
@@ -680,10 +652,11 @@ resource rControlTemplate (WS_RES_BTN_RESTART) {
     {WS_RES_BTN_RESTART_Y, WS_RES_BIN_RESTART_LEFT, WS_RES_BTN_RESTART_Y + WS_RES_BTN_SPACE_HEIGHT, WS_RES_BIN_RESTART_RIGHT},
     SimpleButtonControl {{
         $0001,
-        $100a,
+        $300a,
         0,
         WS_RES_BTN_STR_RESTART,
-        WS_RS_BTN_WHITE
+        WS_RS_BTN_WHITE,
+        {"\n","",0,0}
     }};
 };
 

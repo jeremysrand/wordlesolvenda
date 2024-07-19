@@ -22,14 +22,16 @@
 #include <MiscTool.h>
 #include <Memory.h>
 #include <Loader.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "main.h"
 #include "solver.h"
 
 
 // Constants and macros
-#define NUM_COLUMNS 5
-#define NUM_ROWS 6
+#define NUM_COLUMNS WORD_LEN
+#define NUM_ROWS MAX_GUESSES
 
 #define IS_LETTER_CONTROL(id) (((id) >= WS_RES_BTN_0_0) && ((id) <= WS_RES_BTN_5_4))
 #define IS_OK_CONTROL(id) (((id) >= WS_RES_BTN_0_OK) && ((id) <= WS_RES_BTN_5_OK))
@@ -43,7 +45,7 @@
 #define CONTROL_ROW_TO_OK_HANDLE(row) GetCtlHandleFromID(winPtr, CONTROL_ROW_TO_OK_ID(row))
 
 #define CHAR_TO_BUTTON_STR(ch) ((Pointer)(unsigned long)(((ch) - 'A') + WS_RES_BTN_STR_A))
-#define BUTTON_STR_TO_CHAR(buttonStr) (((buttonStr) - WS_RES_BTN_STR_A) + 'A')
+#define BUTTON_STR_TO_CHAR(buttonStr) ((((long)(buttonStr)) - WS_RES_BTN_STR_A) + 'A')
 
 
 // Globals
@@ -53,14 +55,9 @@ static GrafPortPtr winPtr;
 static unsigned int userId;
 static unsigned int currentRow;
 
-static char * guesses[] = {
-    "AEROS",
-    "UNITY",
-    "PHONE",
-    "APPLE",
-    "RETRO",
-    "FAULT"
-};
+static char line1[64];
+static char line2[64];
+static char knownLetters[NUM_COLUMNS];
 
 
 // Implementation
@@ -94,11 +91,24 @@ void NDAInit(int code)
 }
 
 
+void drawText(void)
+{
+    Rect frame = {WS_RES_TEXT_1_Y, 0, WS_RES_TEXT_2_Y+WS_RES_TEXT_HEIGHT, WS_RES_WIN_WIDTH};
+    EraseRect(&frame);
+    PenNormal();
+    MoveTo(2*WS_RES_BTN_SPACE_X, WS_RES_TEXT_1_Y + WS_RES_TEXT_HEIGHT);
+    DrawCString(line1);
+    MoveTo(2*WS_RES_BTN_SPACE_X, WS_RES_TEXT_2_Y + WS_RES_TEXT_HEIGHT);
+    DrawCString(line2);
+}
+
+
 #pragma databank 1
 void DrawContents(void)
 {
     PenNormal();
     DrawControls(GetPort());
+    drawText();
 }
 #pragma databank 0
 
@@ -106,7 +116,18 @@ void setButtonColour(CtlRecHndl ctl, long colour)
 {
     HLock((Handle)ctl);
     (*ctl)->ctlColor = (Pointer)colour;
+    InvalOneCtlByID(winPtr, (*ctl)->ctlID);
     HUnlock((Handle)ctl);
+}
+
+long getButtonColour(CtlRecHndl ctl)
+{
+    long colour;
+    
+    HLock((Handle)ctl);
+    colour = (long)(*ctl)->ctlColor;
+    HUnlock((Handle)ctl);
+    return colour;
 }
 
 void cycleButtonColor(Long id)
@@ -135,20 +156,39 @@ void setButtonTitle(CtlRecHndl ctl, char ch)
     SetCtlTitle(CHAR_TO_BUTTON_STR(ch), (Handle)ctl);
 }
 
+char getButtonTitle(CtlRecHndl ctl)
+{
+    return BUTTON_STR_TO_CHAR(GetCtlTitle(ctl));
+}
+
 void setupButtons(void)
 {
     int row, col;
     CtlRecHndl ctl;
+    const char * guess;
     
     currentRow = 0;
+    memset(knownLetters, 0, sizeof(knownLetters));
+    
+    *line1 = '\0';
+    strcpy(line2, "  Thinking...");
+    drawText();
+    
+    resetSolver();
+    guess = nextGuess(NULL);
+    
+    sprintf(line1, "Words remaining: %d", numRemainingWords());
+    strcpy(line2, "Mark letters in solution");
+    drawText();
+    
     for (row = 0; row < NUM_ROWS; row++) {
         for (col = 0; col < NUM_COLUMNS; col++) {
             ctl = CONTROL_ROW_COL_TO_HANDLE(row, col);
             setButtonColour(ctl, WS_RS_BTN_WHITE);
-            setButtonTitle(ctl, guesses[row][col]);
             if (row > 0)
                 HideControl(ctl);
             else {
+                setButtonTitle(ctl, guess[col]);
                 ShowControl(ctl);
             }
             
@@ -220,23 +260,64 @@ void HandleRun(void)
 
 void incrementRow(void)
 {
-    // JSR_TODO - Read the current values and feed the algorithm here
-    
+    static tLetterState state[WORD_LEN];
     int col;
     CtlRecHndl ctl;
+    const char * guess;
+    int numSolved = 0;
     
     for (col = 0; col < NUM_COLUMNS; col++) {
         ctl = CONTROL_ROW_COL_TO_HANDLE(currentRow, col);
         HiliteControl(inactiveHilite, ctl);
+        switch (getButtonColour(ctl)) {
+            case WS_RS_BTN_GREEN:
+                state[col] = IN_WORD_AT_POS;
+                numSolved++;
+                knownLetters[col] = getButtonTitle(ctl);
+                break;
+            case WS_RS_BTN_YELLOW:
+                state[col] = IN_WORD_OTHER_POS;
+                break;
+            default:
+                state[col] = NOT_IN_WORD;
+                break;
+        }
     }
     HideControl(CONTROL_ROW_TO_OK_HANDLE(currentRow));
     
+    if (numSolved == NUM_COLUMNS) {
+        strcpy(line1, "Solved the Wordle!");
+        strcpy(line2, " Click Restart to try again.");
+        drawText();
+        return;
+    }
+    
     currentRow++;
     if (currentRow < NUM_ROWS) {
+        strcpy(line2, "  Thinking...");
+        drawText();
+        guess = nextGuess(state);
+        if (guess == NULL) {
+            strcpy(line1, "Failed to solve the Wordle!");
+            strcpy(line2, " Click Restart to try again.");
+            drawText();
+            return;
+        }
+        
+        sprintf(line1, "Words remaining: %d", numRemainingWords());
+        strcpy(line2, "Mark letters in solution");
+        drawText();
+        
         for (col = 0; col < NUM_COLUMNS; col++) {
             ctl = CONTROL_ROW_COL_TO_HANDLE(currentRow, col);
             ShowControl(ctl);
-            HiliteControl(noHilite, ctl);
+            setButtonTitle(ctl, guess[col]);
+            if (knownLetters[col] == guess[col]) {
+                HiliteControl(inactiveHilite, ctl);
+                setButtonColour(ctl, WS_RS_BTN_GREEN);
+            } else {
+                HiliteControl(noHilite, ctl);
+            }
         }
         ShowControl(CONTROL_ROW_TO_OK_HANDLE(currentRow));
     }

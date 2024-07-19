@@ -5,11 +5,10 @@
 //  Created by Jeremy Rand on 2024-07-17.
 //
 
-#include <texttool.h>
 #include <TYPES.h>
+#include <misctool.h>
 
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -18,13 +17,9 @@
 
 // Defines
 
-#define VERSION "v2.0"
-
-#define WORD_LEN 5
 #define NUM_LETTERS 26
 #define LETTER_TO_INDEX(letter) ((letter) - 'A')
 #define INDEX_TO_LETTER(index) ((index) + 'A')
-#define MAX_GUESSES 6
 
 #ifdef CQ2
 #define BEST_WORD "AROSE"
@@ -39,20 +34,22 @@ typedef struct tLetterCounts {
     uint16_t max;
 } tLetterCounts;
 
+
 // Globals
 
-uint16_t numWords;
-char * words;
-uint16_t * rank;
-char * currentGuess;
-char hints[WORD_LEN];
+static uint16_t numWords;
+static char * words;
+static uint16_t * rank;
 
-Boolean rankedOnly;
-Boolean * wordsEliminated = NULL;
-tLetterCounts letterCounts[NUM_LETTERS];
-char eliminatedLetters[WORD_LEN][NUM_LETTERS + 1];
-char solvedLetters[WORD_LEN];
-uint16_t totalLetterCounts[WORD_LEN][NUM_LETTERS];
+static uint16_t numWordsRemaining;
+static char * currentGuess;
+static uint16_t guessNum;
+static Boolean rankedOnly;
+static Boolean * wordsEliminated = NULL;
+static tLetterCounts letterCounts[NUM_LETTERS];
+static char eliminatedLetters[WORD_LEN][NUM_LETTERS + 1];
+static char solvedLetters[WORD_LEN];
+static uint16_t totalLetterCounts[WORD_LEN][NUM_LETTERS];
 
 
 // Implementation
@@ -68,14 +65,6 @@ void updateLetterCount(uint16_t wordIndex, char * wordPtr)
         letterIndex = LETTER_TO_INDEX(*wordPtr);
         totalLetterCounts[currentLetterCounts[letterIndex]][letterIndex]++;
         currentLetterCounts[letterIndex]++;
-    }
-}
-
-void printWord(char * wordPtr)
-{
-    uint16_t i;
-    for (i = 0; i < WORD_LEN; i++, wordPtr++) {
-        putc(*wordPtr, stdout);
     }
 }
 
@@ -108,7 +97,7 @@ void blockCharAtPosition(char ch, uint16_t pos)
     *ptr = '\0';
 }
 
-void updateKnowledge(void)
+void updateKnowledge(const tLetterState * states)
 {
     static Boolean letterVisited[NUM_LETTERS];
     uint16_t i, j;
@@ -130,18 +119,17 @@ void updateKnowledge(void)
             if (LETTER_TO_INDEX(currentGuess[j]) != letterIndex)
                 continue;
             
-            switch (hints[j]) {
-                case 'x':
-                case 'X':
+            switch (states[j]) {
+                case NOT_IN_WORD:
                     capNumInstances = TRUE;
                     break;
                     
-                case '?':
+                case IN_WORD_OTHER_POS:
                     blockCharAtPosition(currentGuess[j], j);
                     minNumInstances++;
                     break;
                     
-                case '^':
+                case IN_WORD_AT_POS:
                     solvedLetters[j] = currentGuess[j];
                     minNumInstances++;
                     break;
@@ -152,8 +140,6 @@ void updateKnowledge(void)
         if (capNumInstances)
             letterCounts[letterIndex].max = minNumInstances;
     }
-        
-    
 }
 
 Boolean wordMatchesRules(char * wordPtr)
@@ -299,8 +285,9 @@ void makeNextGuess(uint16_t numGuesses)
     char * wordPtr;
     uint32_t bestScore = 0;
     uint32_t currentScore;
-    uint16_t numWordsRemaining = 0;
+    BOOLEAN searchForLetters;
     
+    numWordsRemaining = 0;
     memset(totalLetterCounts, 0, sizeof(totalLetterCounts));
     wordPtr = words;
     for (wordIndex = 0; wordIndex < numWords; wordIndex++, wordPtr += 5) {
@@ -320,12 +307,11 @@ void makeNextGuess(uint16_t numGuesses)
         updateLetterCount(wordIndex, wordPtr);
     }
     
-    printf("%u word%s remaining ...\n", numWordsRemaining, (numWordsRemaining != 1 ? "s" : ""));
     currentGuess = NULL;
     if (numWordsRemaining == 0)
         return;
     
-    BOOLEAN searchForLetters = maybeSearchForLetters(numGuesses);
+    searchForLetters = maybeSearchForLetters(numGuesses);
     
     wordPtr = words;
     for (wordIndex = 0; wordIndex < numWords; wordIndex++, wordPtr += 5) {
@@ -354,146 +340,15 @@ void makeNextGuess(uint16_t numGuesses)
         maybeGuessAnEliminatedWord();
 }
 
-void promptToQuit(void)
+const char * bestStartWord(void)
 {
-    printf("\n\n   Press any key to quit...");
-    ReadChar(0);
-}
-
-void printInstructions(void)
-{
-    printf("  Use 'X' for letters not in the word.\n  Use '?' for letters in the word but in the wrong place.\n  Use '^' for correct letters.\n\n");
-}
-
-Boolean getMatchInfo(uint16_t numGuesses)
-{
-    uint16_t numCharsRead = 0;
-    uint16_t i;
-    char ch;
-    Boolean isValid = TRUE;
-    
-    do {
-        if (!isValid) {
-            printf("\n\nInvalid entry.\n");
-            printInstructions();
-        }
-        printf("\nGuess %u:          ", numGuesses + 1);
-        printWord(currentGuess);
-        printf("\nEnter match info: ");
-        for (i = 0; i < numCharsRead; i++)
-            putchar(hints[i]);
-        
-        isValid = TRUE;
-        while (isValid) {
-            ch = ReadChar(0);
-            ch &= 0x7f;
-            switch (ch) {
-                case 'x':
-                case 'X':
-                case '?':
-                case '^':
-                    if (numCharsRead < WORD_LEN) {
-                        hints[numCharsRead] = ch;
-                        i++;
-                        numCharsRead++;
-                        putchar(ch);
-                    } else
-                        isValid = FALSE;
-                    break;
-                    
-                case 'q':
-                case 'Q':
-                case '\x1b': // escape
-                    putchar('\n');
-                    return FALSE;
-                    
-                case '\r':
-                case '\n':
-                    if (numCharsRead == WORD_LEN) {
-                        putchar('\n');
-                        return TRUE;
-                    }
-                    isValid = FALSE;
-                    break;
-                    
-                case '\x7f':
-                case '\b':
-                    if (numCharsRead > 0) {
-                        printf("\b \b");
-                        numCharsRead--;
-                    }
-                    break;
-                    
-                default:
-                    isValid = FALSE;
-            }
-        }
-    } while (TRUE);
-}
-
-#ifndef FIND_BEST_START_WORD
-void solvePuzzle(void)
-{
-    Boolean foundWord = FALSE;
-    uint16_t numGuesses;
-    uint16_t i;
-    
-    printf("Wordle Solver " VERSION "\n  By Jeremy Rand\n\nInstructions:\n");
-    printInstructions();
-    
-    rankedOnly = TRUE;
-    for (numGuesses = 0; numGuesses < MAX_GUESSES; numGuesses++) {
-        if (numGuesses == 0)
-            currentGuess = BEST_WORD;
-        else {
-            printf("\n  ... Thinking, ");
-            updateKnowledge();
-            makeNextGuess(numGuesses);
-        }
-        
-        if ((rankedOnly) &&
-            (currentGuess == NULL)) {
-            printf("\n\nEliminated all common words.\n  ... Considering more rare words,\n  ... Thinking, ");
-            rankedOnly = FALSE;
-            makeNextGuess(numGuesses);
-        }
-        
-        if (currentGuess == NULL) {
-            printf("\n\nCould not find a guess that mathches the criteria.\n  Did you give good feedback on the letters in the target word?\n");
-            promptToQuit();
-            return;
-        }
-        
-        if (!getMatchInfo(numGuesses))
-            return;
-        
-        foundWord = TRUE;
-        for (i = 0; i < WORD_LEN; i++) {
-            if (hints[i] != '^') {
-                foundWord = FALSE;
-                break;
-            }
-        }
-        if (foundWord) {
-            printf("\nI solved the Wordle.  It was ");
-            printWord(currentGuess);
-            promptToQuit();
-            return;
-        }
-    }
-    
-    printf("\nRan out of guesses.\n  Did you give good feedback on the letters in the target word?\n");
-    promptToQuit();
-}
-#else
-void findBestStartWord(void)
-{
+    numWordsRemaining = 0;
     uint16_t wordIndex;
-    uint16_t i;
     char * wordPtr;
+#ifdef FIND_BEST_START_WORD
+    uint16_t i;
     uint32_t bestScore = 0;
     uint32_t currentScore;
-    char * bestWord;
     
     memset(totalLetterCounts, 0, sizeof(totalLetterCounts));
     
@@ -501,6 +356,7 @@ void findBestStartWord(void)
     for (wordIndex = 0; wordIndex < numWords; wordIndex++, wordPtr += 5) {
         if (rank[wordIndex] == 0)
             continue;
+        numWordsRemaining++;
         updateLetterCount(wordIndex, wordPtr);
     }
     
@@ -510,19 +366,48 @@ void findBestStartWord(void)
         if (currentScore > bestScore)
         {
             bestScore = currentScore;
-            bestWord = wordPtr;
+            currentGuess = wordPtr;
         }
     }
-    
-    printf("\nBest Word: ");
-    printWord(bestWord);
-    promptToQuit();
-}
+#else
+    for (wordIndex = 0; wordIndex < numWords; wordIndex++, wordPtr += 5) {
+        if (rank[wordIndex] == 0)
+            continue;
+        
+        numWordsRemaining++;
+    }
+    currentGuess = BEST_WORD;
 #endif
+    return currentGuess;
+}
+
+const char * nextGuess(const tLetterState * states)
+{
+    const char * result = NULL;
+    if (guessNum == 0) {
+        result = bestStartWord();
+    } else {
+        updateKnowledge(states);
+        makeNextGuess(guessNum);
+        if ((rankedOnly) &&
+            (currentGuess == NULL)) {
+            rankedOnly = FALSE;
+            makeNextGuess(guessNum);
+        }
+        result = currentGuess;
+    }
+    
+    guessNum++;
+    return result;
+}
+
+int numRemainingWords(void)
+{
+    return numWordsRemaining;
+}
 
 void initSolver(void)
 {
-    uint16_t i;
     uint16_t * ptrNumWords;
     
     // This is weird and I don't know why I need to do this but this makes it work.  Perhaps this triggers the segment to load.
@@ -532,7 +417,16 @@ void initSolver(void)
     rank = &(countData.rank[0]);
     
     wordsEliminated = malloc(sizeof(Boolean) * numWords);
+    resetSolver();
+}
+
+void resetSolver(void)
+{
+    uint16_t i;
     
+    currentGuess = NULL;
+    guessNum = 0;
+    rankedOnly = FALSE;
     memset(wordsEliminated, 0, sizeof(Boolean) * numWords);
     memset(eliminatedLetters, 0, sizeof(eliminatedLetters));
     memset(solvedLetters, 0, sizeof(solvedLetters));

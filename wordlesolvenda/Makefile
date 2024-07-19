@@ -59,7 +59,10 @@ SRCDIRS+=$(GENDIR)
 ROOTCFILE=main.c
 
 # Add any arguments you want passed to the C compiler to this variable:
-CFLAGS+=
+CFLAGS+= +O
+ifeq ($(BUILD_FOR_CQ2),1)
+CFLAGS += -dCQ2
+endif
 
 # Add any arguments you want passed to the resource compiler to this variable:
 REZFLAGS+=
