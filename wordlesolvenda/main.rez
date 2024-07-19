@@ -174,7 +174,7 @@ resource rMenuItem (WS_RES_MENU_ITEM_CQ2) {
    WS_RES_MENU_ITEM_CQ2,
    "","",
    0,
-   RefIsResource*ItemTitleRefShift+fXOR+fDisabled,
+   RefIsResource*ItemTitleRefShift+fXOR,
    WS_RES_BTN_STR_CQ2
    };
       

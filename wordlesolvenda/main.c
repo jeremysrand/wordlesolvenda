@@ -55,8 +55,8 @@ static GrafPortPtr winPtr;
 static unsigned int userId;
 static unsigned int currentRow;
 
-static char line1[64];
-static char line2[64];
+static char line1[64] = "";
+static char line2[64] = "";
 static char knownLetters[NUM_COLUMNS];
 
 
@@ -126,7 +126,6 @@ long getButtonColour(CtlRecHndl ctl)
     
     HLock((Handle)ctl);
     colour = (long)(*ctl)->ctlColor;
-    HUnlock((Handle)ctl);
     return colour;
 }
 
@@ -204,6 +203,21 @@ void setupButtons(void)
 }
 
 
+void initSolverWithVariant(void) {
+    CtlRecHndl ctl = GetCtlHandleFromID(winPtr, WS_RES_POPUP);
+    tVariant variant = NYT_VARIANT;
+    
+    
+    HLock((Handle)ctl);
+    if ((*ctl)->ctlValue == WS_RES_MENU_ITEM_CQ2)
+        variant = CQ2_VARIANT;
+    HUnlock((Handle)ctl);
+    
+    initSolver(variant);
+    setupButtons();
+}
+
+
 GrafPortPtr NDAOpen(void)
 {
     unsigned int oldResourceApp;
@@ -214,7 +228,6 @@ GrafPortPtr NDAOpen(void)
     
     if (ndaActive)
         return NULL;
-    initSolver();
     
     levelDCB.pCount = 2;
     GetLevelGS(&levelDCB);
@@ -245,7 +258,7 @@ GrafPortPtr NDAOpen(void)
     levelDCB.level = oldLevel;
     SetLevelGS(&levelDCB);
     
-    setupButtons();
+    initSolverWithVariant();
     
     SetCurResourceApp(oldResourceApp);
     
@@ -335,6 +348,8 @@ void HandleControl(EventRecord *event)
         incrementRow();
     } else if (event->wmTaskData4 == WS_RES_BTN_RESTART) {
         setupButtons();
+    } else if (event->wmTaskData4 == WS_RES_POPUP) {
+        initSolverWithVariant();
     }
 }
 

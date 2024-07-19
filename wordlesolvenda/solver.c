@@ -21,11 +21,10 @@
 #define LETTER_TO_INDEX(letter) ((letter) - 'A')
 #define INDEX_TO_LETTER(index) ((index) + 'A')
 
-#ifdef CQ2
-#define BEST_WORD "AROSE"
-#else
-#define BEST_WORD "AEROS"
-#endif
+#undef FIND_BEST_START_WORD
+
+#define CQ2_BEST_WORD "AROSE"
+#define NYT_BEST_WORD "AEROS"
 
 // Typedefs
 
@@ -37,6 +36,7 @@ typedef struct tLetterCounts {
 
 // Globals
 
+static tVariant currentVariant = NYT_VARIANT;
 static uint16_t numWords;
 static char * words;
 static uint16_t * rank;
@@ -376,7 +376,11 @@ const char * bestStartWord(void)
         
         numWordsRemaining++;
     }
-    currentGuess = BEST_WORD;
+    
+    if (currentVariant == CQ2_VARIANT)
+        currentGuess = CQ2_BEST_WORD;
+    else
+        currentGuess = NYT_BEST_WORD;
 #endif
     return currentGuess;
 }
@@ -406,17 +410,34 @@ int numRemainingWords(void)
     return numWordsRemaining;
 }
 
-void initSolver(void)
+void initSolver(tVariant variant)
 {
     uint16_t * ptrNumWords;
+    uint16_t nytNumWords;
+    uint16_t cq2NumWords;
     
     // This is weird and I don't know why I need to do this but this makes it work.  Perhaps this triggers the segment to load.
-    ptrNumWords = &wordData.numWords;
-    numWords = *ptrNumWords;
-    words = &(wordData.words[0]);
-    rank = &(countData.rank[0]);
+    ptrNumWords = &nytWordData.numWords;
+    nytNumWords = *ptrNumWords;
     
-    wordsEliminated = malloc(sizeof(Boolean) * numWords);
+    ptrNumWords = &cq2WordData.numWords;
+    cq2NumWords = *ptrNumWords;
+    
+    currentVariant = variant;
+    
+    if (currentVariant == CQ2_VARIANT) {
+        numWords = cq2NumWords;
+        words = &(cq2WordData.words[0]);
+        rank = &(cq2CountData.rank[0]);
+    } else {
+        numWords = nytNumWords;
+        words = &(nytWordData.words[0]);
+        rank = &(nytCountData.rank[0]);
+    }
+    
+    if (wordsEliminated == NULL) {
+        wordsEliminated = malloc(sizeof(Boolean) * (cq2NumWords > nytNumWords ? cq2NumWords : nytNumWords));
+    }
     resetSolver();
 }
 

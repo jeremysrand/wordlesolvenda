@@ -7,13 +7,14 @@
 
 use strict;
 
-die "$0: Expected three arguments, input file, word count file and output dir" if ($#ARGV != 2);
+die "$0: Expected four arguments, input file, word count file, output dir and prefix" if ($#ARGV != 3);
 
 my $gInputFileName = $ARGV[0];
 my $gWordCountFileName = $ARGV[1];
 my $gGenDir = $ARGV[2];
-my $gOutputFileName = $gGenDir . "/wordData.s";
-my $gOutputCountFileName = $gGenDir . "/countData.s";
+my $gPrefix = $ARGV[3];
+my $gOutputFileName = $gGenDir . "/" . $gPrefix . "WordData.s";
+my $gOutputCountFileName = $gGenDir . "/" . $gPrefix . "CountData.s";
 
 my %gAllWordCounts;
 open my $gWordCountFile, "<", "$gWordCountFileName" or die "$0: Unable to open $gWordCountFileName for reading, $!";
@@ -33,10 +34,10 @@ open my $gInputFile, "<", "$gInputFileName" or die "$0: Unable to open $gInputFi
 
 my $text = << "EOF";
     case on
-    mcopy wordData.macros
-    keep wordData
+    mcopy ${gPrefix}WordData.macros
+    keep ${gPrefix}WordData
 
-wordData data wordDataSeg
+${gPrefix}WordData data ${gPrefix}WordDataSeg
 EOF
 print $gOutputFile $text;
 
@@ -122,10 +123,10 @@ foreach my $word (sort { $gWordCounts{$a} <=> $gWordCounts{$b} } keys %gWordCoun
 
 $text = << "EOF";
     case on
-    mcopy countData.macros
-    keep countData
+    mcopy ${gPrefix}CountData.macros
+    keep ${gPrefix}CountData
 
-countData data countDataSeg
+${gPrefix}CountData data ${gPrefix}CountDataSeg
 EOF
 
 print $gOutputCountFile $text;

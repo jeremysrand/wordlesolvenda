@@ -10,6 +10,9 @@
 
 #include <stdint.h>
 
+
+// Types
+
 typedef struct tWordData {
     uint16_t numWords;
     char words[1];
@@ -19,7 +22,14 @@ typedef struct tCountData {
     uint16_t rank[1];
 } tCountData;
 
-extern tWordData wordData;
-extern tCountData countData;
+
+// Declarations
+
+extern tWordData nytWordData;
+extern tCountData nytCountData;
+
+extern tWordData cq2WordData;
+extern tCountData cq2CountData;
+
 
 #endif /* words_h */
