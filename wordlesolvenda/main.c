@@ -59,6 +59,8 @@ static char line1[64] = "";
 static char line2[64] = "";
 static char knownLetters[NUM_COLUMNS];
 
+static long yellow_res = WS_RS_BTN_YELLOW_640;
+
 
 // Implementation
 
@@ -135,10 +137,11 @@ void cycleButtonColor(Long id)
     HLock((Handle)ctl);
     switch ((int)(unsigned long)((*ctl)->ctlColor)) {
         case WS_RS_BTN_WHITE:
-            (*ctl)->ctlColor = (Pointer)WS_RS_BTN_YELLOW;
+            (*ctl)->ctlColor = (Pointer)yellow_res;
             break;
             
-        case WS_RS_BTN_YELLOW:
+        case WS_RS_BTN_YELLOW_640:
+        case WS_RS_BTN_YELLOW_320:
             (*ctl)->ctlColor = (Pointer)WS_RS_BTN_GREEN;
             break;
             
@@ -229,6 +232,12 @@ GrafPortPtr NDAOpen(void)
     if (ndaActive)
         return NULL;
     
+    if ((GetSCB(0) & mode640) != 0) {
+        yellow_res = WS_RS_BTN_YELLOW_640;
+    } else {
+        yellow_res = WS_RS_BTN_YELLOW_320;
+    }
+    
     levelDCB.pCount = 2;
     GetLevelGS(&levelDCB);
     oldLevel = levelDCB.level;
@@ -288,7 +297,8 @@ void incrementRow(void)
                 numSolved++;
                 knownLetters[col] = getButtonTitle(ctl);
                 break;
-            case WS_RS_BTN_YELLOW:
+            case WS_RS_BTN_YELLOW_640:
+            case WS_RS_BTN_YELLOW_320:
                 state[col] = IN_WORD_OTHER_POS;
                 break;
             default:

@@ -187,7 +187,7 @@ resource rControlTemplate (WS_RES_BTN_0_0) {
         $100a,
         0,
         WS_RES_BTN_STR_A,
-        WS_RS_BTN_YELLOW
+        WS_RS_BTN_YELLOW_640
     }};
 };
 
@@ -676,10 +676,18 @@ resource rCtlColorTbl (WS_RS_BTN_GREEN) {
     $000f       // Text background colour is black and foreground colour is white when selected
 };
 
-resource rCtlColorTbl (WS_RS_BTN_YELLOW) {
+resource rCtlColorTbl (WS_RS_BTN_YELLOW_640) {
     $0000,      // Outline colour is black
     $00e0,      // Interior colour is yellow (640 mode default) when not selected
     $0000,      // Interior colour is black when selected
     $00e0,      // Text background colour is yellow and foreground colour is black when not selected
+    $000f       // Text background colour is black and foreground colour is white when selected
+};
+
+resource rCtlColorTbl (WS_RS_BTN_YELLOW_320) {
+    $0000,      // Outline colour is black
+    $0090,      // Interior colour is yellow (640 mode default) when not selected
+    $0000,      // Interior colour is black when selected
+    $0090,      // Text background colour is yellow and foreground colour is black when not selected
     $000f       // Text background colour is black and foreground colour is white when selected
 };
