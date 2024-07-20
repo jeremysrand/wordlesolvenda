@@ -12,9 +12,9 @@ It will give you its first guess of a five letter word.  Then, you should click 
 Note that if the letter appears multiple times in the solution, then it is possible to have multiple letters marked as correct or correct and in the wrong position.  If the guess has more
 letters of that type in it, then one should be marked as wrong.
 
-[Download a disk image](https://github.com/jeremysrand/wordlesolvenda/releases/download/1.0/wordlesolve_100.2mg)
+[Download a disk image](https://github.com/jeremysrand/wordlesolvenda/releases/download/1.0/wordlesolvenda.2mg)
 
-[Download a SHK archive](https://github.com/jeremysrand/wordlesolvenda/releases/download/1.0/wordlesolve100.shk)
+[Download a SHK archive](https://github.com/jeremysrand/wordlesolvenda/releases/download/1.0/wordlesolvenda.shk)
 
 Also, this solver does seem to be able to solve puzzles in [WordleGS](https://github.com/dmalec/Wordle.GS) by Dan Malec.  However, you must continually switch between the solver by opening
 it from the Apple menu and then back to the puzzle by clicking on the desktop background.  It is a bit awkward but it works.
