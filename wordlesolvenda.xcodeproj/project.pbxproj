@@ -54,6 +54,7 @@
 /* Begin PBXFileReference section */
 		9D55E4672C4B6499009F900A /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		9D55E4682C4B655B009F900A /* wordlesolvenda.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wordlesolvenda.png; sourceTree = "<group>"; };
+		9D55E4692C4B8152009F900A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9D741AA92C48422D008B2961 /* wordlesolvenda */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = wordlesolvenda; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D741AAC2C48422D008B2961 /* wordlesolvenda.2mg */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = wordlesolvenda.2mg; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D741AAE2C48422D008B2961 /* wordlesolvenda.shk */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = wordlesolvenda.shk; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,6 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				9D55E4672C4B6499009F900A /* LICENSE */,
+				9D55E4692C4B8152009F900A /* README.md */,
 				9D55E4682C4B655B009F900A /* wordlesolvenda.png */,
 				9D741AB42C48422D008B2961 /* wordlesolvenda */,
 				9D741AAA2C48422D008B2961 /* Products */,
